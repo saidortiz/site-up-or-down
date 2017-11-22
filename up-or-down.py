@@ -1,25 +1,29 @@
 #!/usr/bin/env python
-import os, time, httplib, socket
-from termcolor import colored
+import sys, os, time, httplib, socket
+from colorama import init
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+from termcolor import cprint, colored
+from pyfiglet import figlet_format
+
+
+
+cprint(figlet_format('UP OR DOWN!', font='small'),
+       'red', 'on_white', attrs=['bold'])
+
 
 #urls
 SITES = [
-	"www.github.com.com",
+
 	"www.redteamsec.com",
 	"www.security.divdesign.com",
 	"www.aguirremasaguirre.com",
 	"www.i3sec.com.mx",
 	"www.google.com.mx",
+    "www.pietschsoft.com",
+    "www.Extratorrent.cc",
+    "www.Vube.com",
+    "www.Sukebei.nyaa.se",
+
 ]
 
 #for search if url is up or down
