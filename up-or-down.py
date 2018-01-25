@@ -1,52 +1,53 @@
-#!/usr/bin/env python
-import sys, os, time, httplib, socket
+from urllib2 import Request, urlopen, HTTPError, URLError, os
+
 from colorama import init
 
 from termcolor import cprint, colored
 from pyfiglet import figlet_format
-
-
-
-cprint(figlet_format('UP OR DOWN!', font='small'),
+cprint(figlet_format('url check!', font='small'),
        'red', 'on_white', attrs=['bold'])
 
+user_input = raw_input("Inserta ruta de tu archivo txt: ")
 
-#urls
-SITES = [
+assert os.path.exists(user_input), "no encontro tu archivo en, "+str(user_input)
+f = open(user_input,'r+')
 
-	"www.redteamsec.com",
-	"www.security.divdesign.com",
-	"www.aguirremasaguirre.com",
-	"www.i3sec.com.mx",
-	"www.google.com.mx",
-    "www.pietschsoft.com",
-    "www.Extratorrent.cc",
-    "www.Vube.com",
-    "www.Sukebei.nyaa.se",
+list_of_lists = []
+with open(user_input) as f:
+    for line in f:
+        list_of_lists = line
+        user_agent = 'Mozilla/20.0.1 (compatible; MSIE 5.5; Windows NT)'
+        headers = { 'User-Agent':user_agent }
 
-]
+        req = Request('http://' + list_of_lists, headers = headers)
+        try:
+                page_open = urlopen(req)
+                text = '\x1b[6;30;42m' + 'site found' + '\x1b[0m'
+                print "\a"
+                errorcode = page_open.getcode()
+                print colored (" {0:10} {1:10} {2:20}".format( line, text, errorcode  ),"white")
+                print "\a"
+                #create a txt with up sites
+                if os.path.exists("up.txt"):
+                    with open('up.txt', 'a') as the_file:
 
-#for search if url is up or down
-for site in SITES:
-			try: #intenta hacer la peticion
-				conn = httplib.HTTPConnection(site, timeout=10)
-				conn.request("HEAD", "/")
-				response = conn.getresponse()
-				if response.status == 200:
-					print "\a"
-					print colored ("{0:30} {1:10}".format(site, response.status),"white") + '\x1b[6;30;42m' + 'Success!' + '\x1b[0m'
+                        the_file.write( list_of_lists)
 
-
-               #close conection
-				conn.close()
-			except (httplib.HTTPException, socket.error) as ex: #envia el error
-
-			   print colored( site) + '\x1b[6;30;43m' + 'site is down!' + '\x1b[0m'
+                else:
+                    with open('up', 'a') as the_file:
+                        the_file.write( list_of_lists)
 
 
 
 
+        except HTTPError, e:
 
+                print colored ("{0:0} {1:10}".format(e.code, line)) + '\x1b[31m' + 'not found!' + '\x1b[31m'
+                #create a txt with down sites
+                if os.path.exists("down.txt"):
+                    with open('down.txt', 'a') as the_file:
+                        the_file.write( list_of_lists)
 
-#time.sleep(5)
-#os.system("clear")
+                else:
+                    with open('down', 'a') as the_file:
+                        the_file.write( list_of_lists)
